@@ -35,12 +35,12 @@ var revPlugin = function revPlugin() {
     for(i = 0; i < length; i++) {
       line = lines[i];
       groups = FILE_DECL.exec(line);
-      if(groups && groups.length > 1) {
+      while (groups && groups.length > 1) {
         // are we an "absoulte path"? (e.g. /js/app.js)
         var normPath = path.normalize(groups[1]);
         if (normPath.indexOf(path.sep) === 0) {
           dependencyPath = path.join(file.base, normPath);
-        } 
+        }
         else {
           dependencyPath = path.resolve(path.dirname(file.path), normPath);
         }
@@ -54,6 +54,8 @@ var revPlugin = function revPlugin() {
         catch(e) {
           // fail silently.
         }
+
+        groups = FILE_DECL.exec(line);
       }
       lines[i] = line;
       FILE_DECL.lastIndex = 0;
